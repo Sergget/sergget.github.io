@@ -1,0 +1,440 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/images/icons/5262cc2995893.jpg?v=2.6.2" type="image/png" sizes="16x16"><link rel="icon" href="/images/icons/5262cc2995893.jpg?v=2.6.2" type="image/png" sizes="32x32"><meta name="description" content="是什么? 常用的磁盘检查工具，smart(Self-Monitoring,Analysis and Reporting Technology)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="硬盘自检工具-smartctl的使用">
+<meta property="og:url" content="https://sergget.ga/20210518/88d6c7c0b6a9/index.html">
+<meta property="og:site_name" content="Sergio7&#39;s Blog">
+<meta property="og:description" content="是什么? 常用的磁盘检查工具，smart(Self-Monitoring,Analysis and Reporting Technology)">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-18T01:38:08.000Z">
+<meta property="article:modified_time" content="2021-05-18T01:53:57.513Z">
+<meta property="article:author" content="Sergio7">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="硬盘自检">
+<meta property="article:tag" content="smartctl">
+<meta name="twitter:card" content="summary"><title>硬盘自检工具-smartctl的使用 | Sergio7's Blog</title><link ref="canonical" href="https://sergget.ga/20210518/88d6c7c0b6a9/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.6.2"><script src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" data-ad-client="ca-pub-9714581419746383" async=""></script><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  assistSearch: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"default","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"复制","copySuccess":"复制成功","copyError":"复制失败"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">首页</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="javascript:;" onclick="return false;"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">分类</span></a><div class="header-nav-submenu"><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/categories/Office/"><span class="header-nav-submenu-item__text">Office</span></a></div><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/categories/日常/"><span class="header-nav-submenu-item__text">日常</span></a></div><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/categories/运维/"><span class="header-nav-submenu-item__text">运维</span></a></div></div></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="javascript:;" onclick="return false;"><span class="header-nav-menu-item__icon"><i class="fas fa-eye"></i></span><span class="header-nav-menu-item__text">查看</span></a><div class="header-nav-submenu"><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/categories/"><span class="header-nav-submenu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-submenu-item__text">分类</span></a></div><div class="header-nav-submenu-item"><a class="header-nav-submenu-item__link" href="/tags/"><span class="header-nav-submenu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-submenu-item__text">标签</span></a></div></div></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">归档</span></a></div></div><div class="header-nav-search"><span class="header-nav-search__icon"><i class="fas fa-search"></i></span><span class="header-nav-search__text">搜索</span></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Sergio7's Blog</div><div class="header-banner-info__subtitle">日常笔记</div></div><div class="header-banner-arrow"><div class="header-banner-arrow__icon"><i class="fas fa-angle-down"></i></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">硬盘自检工具-smartctl的使用</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">发表于</span><span class="post-meta-item__value">2021-05-18</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">更新于</span><span class="post-meta-item__value">2021-05-18</span></span></div></header><div class="post-body"><p>本文转自：<span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="https://www.cnblogs.com/zk47/p/4753615.html" >https://www.cnblogs.com/zk47/p/4753615.html</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+
+        <h2 id="1-是什么"   >
+          <a href="#1-是什么" class="heading-link"><i class="fas fa-link"></i></a><a href="#1-是什么" class="headerlink" title="1. 是什么"></a>1. 是什么</h2>
+      <p>常用的磁盘检查工具，smart(Self-Monitoring,Analysis and Reporting Technology)</p>
+
+        <h2 id="2-安装"   >
+          <a href="#2-安装" class="heading-link"><i class="fas fa-link"></i></a><a href="#2-安装" class="headerlink" title="2. 安装"></a>2. 安装</h2>
+      
+        <h3 id="1-ubuntu"   >
+          <a href="#1-ubuntu" class="heading-link"><i class="fas fa-link"></i></a><a href="#1-ubuntu" class="headerlink" title="(1)ubuntu"></a>(1)ubuntu</h3>
+      <p>$ sudo apt-get install smartmontools</p>
+
+        <h3 id="2-rhat-amp-Centos"   >
+          <a href="#2-rhat-amp-Centos" class="heading-link"><i class="fas fa-link"></i></a><a href="#2-rhat-amp-Centos" class="headerlink" title="(2)rhat &amp; Centos"></a>(2)rhat &amp; Centos</h3>
+      <p>$ yum install smartmontools</p>
+
+        <h2 id="3-使用"   >
+          <a href="#3-使用" class="heading-link"><i class="fas fa-link"></i></a><a href="#3-使用" class="headerlink" title="3. 使用"></a>3. 使用</h2>
+      
+        <h3 id="1-看磁盘是否支持smartctl"   >
+          <a href="#1-看磁盘是否支持smartctl" class="heading-link"><i class="fas fa-link"></i></a><a href="#1-看磁盘是否支持smartctl" class="headerlink" title="(1) 看磁盘是否支持smartctl"></a>(1) 看磁盘是否支持smartctl</h3>
+      <p>$ sudo smartctl -i /dev/sda1<br> smartctl 6.2 2013-07-26 r3841 [x86_64-linux-2.6.18-164.11.1.el5] (local build)<br> Copyright (C) 2002-13, Bruce Allen, Christian Franke, <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://www.smartmontools.org/" >www.smartmontools.org</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p> === START OF INFORMATION SECTION ===<br> Model Family:   Seagate Constellation ES (SATA 6Gb/s)<br> Device Model:   ST1000NM0011<br> Serial Number:  Z1N0EVRZ<br> LU WWN Device Id: 5 000c50 03f123968<br> Firmware Version: SN02<br> User Capacity:  1,000,204,886,016 bytes [1.00 TB]<br> Sector Size:   512 bytes logical/physical<br> Rotation Rate:  7202 rpm<br> Device is:    In smartctl database [for details use: -P show]<br> ATA Version is:  ATA8-ACS T13/1699-D revision 4<br> SATA Version is: SATA 3.0, 6.0 Gb/s (current: 3.0 Gb/s)<br> Local Time is:  Sun Aug 23 23:27:54 2015 CST<br> SMART support is: Available - device has SMART capability.<br> SMART support is: Enabled</p>
+<p>最后两行给出了是否支持smartctl</p>
+
+        <h2 id="2-手动开启支持smartctl"   >
+          <a href="#2-手动开启支持smartctl" class="heading-link"><i class="fas fa-link"></i></a><a href="#2-手动开启支持smartctl" class="headerlink" title="(2)手动开启支持smartctl"></a>(2)手动开启支持smartctl</h2>
+      <p>$ smartctl –smart=on –offlineauto=on –saveauto=on /dev/sda1</p>
+<p>各个参数意思如下：</p>
+<p>-s VALUE, –smart=VALUE<br> Enable/disable SMART on device (on/off)</p>
+<p>-o VALUE, –offlineauto=VALUE (ATA)<br> Enable/disable automatic offline testing on device (on/off)</p>
+<p>-S VALUE, –saveauto=VALUE (ATA)<br> Enable/disable Attribute autosave on device (on/off)</p>
+
+        <h2 id="3-检查磁盘的健康状况"   >
+          <a href="#3-检查磁盘的健康状况" class="heading-link"><i class="fas fa-link"></i></a><a href="#3-检查磁盘的健康状况" class="headerlink" title="(3)检查磁盘的健康状况"></a>(3)检查磁盘的健康状况</h2>
+      <p>$ sudo smartctl -H /dev/sda1<br> smartctl 6.2 2013-07-26 r3841 [x86_64-linux-2.6.18-164.11.1.el5] (local build)<br> Copyright (C) 2002-13, Bruce Allen, Christian Franke, <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://www.smartmontools.org/" >www.smartmontools.org</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p> === START OF READ SMART DATA SECTION ===<br> SMART overall-health self-assessment test result: PASSED</p>
+
+        <h2 id="4-显示磁盘的属性值"   >
+          <a href="#4-显示磁盘的属性值" class="heading-link"><i class="fas fa-link"></i></a><a href="#4-显示磁盘的属性值" class="headerlink" title="(4)显示磁盘的属性值"></a>(4)显示磁盘的属性值</h2>
+      <p>$ sudo smartctl -A /dev/sdl1<br> smartctl 6.2 2013-07-26 r3841 [x86_64-linux-2.6.18-164.11.1.el5] (local build)<br> Copyright (C) 2002-13, Bruce Allen, Christian Franke, <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://www.smartmontools.org/" >www.smartmontools.org</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p> === START OF READ SMART DATA SECTION ===<br> SMART Attributes Data Structure revision number: 10<br> Vendor Specific SMART Attributes with Thresholds:<br> ID# ATTRIBUTE_NAME     FLAG   VALUE WORST THRESH TYPE   UPDATED WHEN_FAILED RAW_VALUE<br>  1 Raw_Read_Error_Rate   0x000f  084  063  044  Pre-fail Always    -    238687534<br>  3 Spin_Up_Time      0x0003  099  099  000  Pre-fail Always    -    0<br>  4 Start_Stop_Count    0x0032  100  100  020  Old_age  Always    -    3<br>  5 Reallocated_Sector_Ct  0x0033  100  100  036  Pre-fail Always    -    0<br>  7 Seek_Error_Rate     0x000f  087  060  030  Pre-fail Always    -    573183052<br>  9 Power_On_Hours     0x0032  063  063  000  Old_age  Always    -    33120<br> 10 Spin_Retry_Count    0x0013  100  100  097  Pre-fail Always    -    0<br> 12 Power_Cycle_Count    0x0032  100  100  020  Old_age  Always    -    3<br> 184 End-to-End_Error    0x0032  100  100  099  Old_age  Always    -    0<br> 187 Reported_Uncorrect   0x0032  100  100  000  Old_age  Always    -    0<br> 188 Command_Timeout     0x0032  100  100  000  Old_age  Always    -    0<br> 189 High_Fly_Writes     0x003a  100  100  000  Old_age  Always    -    0<br> 190 Airflow_Temperature_Cel 0x0022  075  049  045  Old_age  Always    -    25 (Min/Max 20/30)<br> 191 G-Sense_Error_Rate   0x0032  100  100  000  Old_age  Always    -    0<br> 192 Power-Off_Retract_Count 0x0032  100  100  000  Old_age  Always    -    1<br> 193 Load_Cycle_Count    0x0032  100  100  000  Old_age  Always    -    567<br> 194 Temperature_Celsius   0x0022  025  051  000  Old_age  Always    -    25 (0 20 0 0 0)<br> 195 Hardware_ECC_Recovered 0x001a  120  099  000  Old_age  Always    -    238687534<br> 197 Current_Pending_Sector 0x0012  100  100  000  Old_age  Always    -    2<br> 198 Offline_Uncorrectable  0x0010  100  100  000  Old_age  Offline   -    2<br> 199 UDMA_CRC_Error_Count  0x003e  200  200  000  Old_age  Always    -    0</p>
+<p>基本上，SMART属性表列出了制造商在硬盘中定义好的属性值，以及这些属性相关的故障阈值。这个表由驱动固件自动生成和更新。</p>
+<ul>
+<li>ID: 属性值，通常是1到255之间的十进制数字</li>
+<li>ATTRIBUTE_NAME：制造商定义的属性值</li>
+<li>VALUE：这是表格中最重要的信息之一，代表给定属性的标准化值，在1到253之间。253意味着最好情况，1意味着最坏情况。取决于属性和制造商，初始化VALUE可以被设置成100或200.</li>
+<li>FLAG：属性操作标志</li>
+<li>THRESH: 在报告硬盘FAILED状态前，WORST可以允许的最小值</li>
+<li>TYPE: 属性的类型(Pre-fail或Oldage)。Pre-fail类型的属性可被看成一个关键属性，表示参与磁盘的整体SMART健康评估(PASSED/FAILED)。如果任何Pre-fail类型的属性故障，那么可视为磁盘将要发生故障。另一方面，Oldage类型的属性可被看成一个非关键的属性(如正常的磁盘磨损)，表示不会使磁盘本身发生故障。</li>
+<li>UPDATED: 表示属性的更新频率。Offline代表磁盘上执行离线测试的时间。</li>
+<li>WHEN_FAILED: 如果VALUE小于等于THRESH，会被设置成“FAILING_NOW”；如果WORST小于等于THRESH会被设置成“In_the_past”；如果都不是，会被设置成“-”。在“FAILING_NOW”情况下，需要尽快备份重要文件，特别是属性是Pre-fail类型时。“In_the_past”代表属性已经故障了，但在运行测试的时候没问题。“-”代表这个属性从没故障过。</li>
+<li>RAW_VALUE: 制造商定义的原始值，从VALUE派生。</li>
+</ul>
+
+        <h3 id="5-测试磁盘"   >
+          <a href="#5-测试磁盘" class="heading-link"><i class="fas fa-link"></i></a><a href="#5-测试磁盘" class="headerlink" title="(5)测试磁盘"></a>(5)测试磁盘</h3>
+      <ul>
+<li>short 测试</li>
+</ul>
+<p>$ sudo smartctl -t short /dev/sda<br> smartctl 6.2 2013-07-26 r3841 [x86_64-linux-2.6.18-164.11.1.el5] (local build)<br> Copyright (C) 2002-13, Bruce Allen, Christian Franke, <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://www.smartmontools.org/" >www.smartmontools.org</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p> === START OF OFFLINE IMMEDIATE AND SELF-TEST SECTION ===<br> Sending command: “Execute SMART Short self-test routine immediately in off-line mode”.<br> Drive command “Execute SMART Short self-test routine immediately in off-line mode” successful.<br> Testing has begun.<br> Please wait 1 minutes for test to complete.<br> Test will complete after Mon Aug 24 00:01:22 2015</p>
+<p> Use smartctl -X to abort test.</p>
+<ul>
+<li>long测试</li>
+</ul>
+<p>$ sudo smartctl -t long /dev/sda</p>
+<ul>
+<li>看测试进度</li>
+</ul>
+<p>$ sudo smartctl -l selftest /dev/sda<br> smartctl 6.2 2013-07-26 r3841 [x86_64-linux-2.6.18-164.11.1.el5] (local build)<br> Copyright (C) 2002-13, Bruce Allen, Christian Franke, <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://www.smartmontools.org/" >www.smartmontools.org</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p> === START OF READ SMART DATA SECTION ===<br> SMART Self-test log structure revision number 1<br> Num Test_Description  Status         Remaining LifeTime(hours) LBA_of_first_error<br> # 1 Short offline    Completed without error    00%   33120     -</p>
+<ul>
+<li>停止测试</li>
+</ul>
+<p>$ sudo smartctl -X /dev/sda<br> smartctl 6.2 2013-07-26 r3841 [x86_64-linux-2.6.18-164.11.1.el5] (local build)<br> Copyright (C) 2002-13, Bruce Allen, Christian Franke, <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://www.smartmontools.org/" >www.smartmontools.org</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p> === START OF OFFLINE IMMEDIATE AND SELF-TEST SECTION ===<br> Sending command: “Abort SMART off-line mode self-test routine”.<br> Self-testing aborted!</p>
+
+        <h2 id="参考："   >
+          <a href="#参考：" class="heading-link"><i class="fas fa-link"></i></a><a href="#参考：" class="headerlink" title="参考："></a>参考：</h2>
+      <p>(1) <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://linux.cn/article-4682-1.html" >http://linux.cn/article-4682-1.html </a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>(2) <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://xmodulo.com/check-hard-disk-health-linux-smartmontools.html" >http://xmodulo.com/check-hard-disk-health-linux-smartmontools.html </a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>(3) <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://chaorenyong.blog.51cto.com/2163445/1051859" >http://chaorenyong.blog.51cto.com/2163445/1051859 </a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span><br>(4) <span class="exturl"><a class="exturl__link"   target="_blank" rel="noopener" href="http://bbs.chinaunix.net/thread-4132241-1-1.html" >http://bbs.chinaunix.net/thread-4132241-1-1.html</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ 本文结束，感谢您的阅读 ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">本文作者: </span><span class="copyright-author__value"><a href="https://sergget.ga">Sergio7</a></span></div><div class="copyright-link"><span class="copyright-link__name">本文链接: </span><span class="copyright-link__value"><a href="https://sergget.ga/20210518/88d6c7c0b6a9/">https://sergget.ga/20210518/88d6c7c0b6a9/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">版权声明: </span><span class="copyright-notice__value">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://sergget.ga/tags/Linux/">Linux</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://sergget.ga/tags/%E7%A1%AC%E7%9B%98%E8%87%AA%E6%A3%80/">硬盘自检</a></span><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="https://sergget.ga/tags/smartctl/">smartctl</a></span></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/20210518/d37066f8ba29/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">硬盘SMART检测参数详解</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/20210516/b1fc812f7449/"><span class="paginator-prev__text">其他发行版安装deepin软件包</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div><div class="comments" id="comments"><div id="disqus_thread"></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-ov">站点概览</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-text">
+          1. 是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%AE%89%E8%A3%85"><span class="toc-text">
+          2. 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-ubuntu"><span class="toc-text">
+          (1)ubuntu</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-rhat-amp-Centos"><span class="toc-text">
+          (2)rhat &amp; Centos</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%BD%BF%E7%94%A8"><span class="toc-text">
+          3. 使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%9C%8B%E7%A3%81%E7%9B%98%E6%98%AF%E5%90%A6%E6%94%AF%E6%8C%81smartctl"><span class="toc-text">
+          (1) 看磁盘是否支持smartctl</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%89%8B%E5%8A%A8%E5%BC%80%E5%90%AF%E6%94%AF%E6%8C%81smartctl"><span class="toc-text">
+          (2)手动开启支持smartctl</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E6%A3%80%E6%9F%A5%E7%A3%81%E7%9B%98%E7%9A%84%E5%81%A5%E5%BA%B7%E7%8A%B6%E5%86%B5"><span class="toc-text">
+          (3)检查磁盘的健康状况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%98%BE%E7%A4%BA%E7%A3%81%E7%9B%98%E7%9A%84%E5%B1%9E%E6%80%A7%E5%80%BC"><span class="toc-text">
+          (4)显示磁盘的属性值</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%B5%8B%E8%AF%95%E7%A3%81%E7%9B%98"><span class="toc-text">
+          (5)测试磁盘</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%EF%BC%9A"><span class="toc-text">
+          参考：</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/images/icons/IMG_0668.JPG" alt="avatar"></div><p class="sidebar-ov-author__text">人生很短，想学的很多</p></div><div class="sidebar-ov-social"><a class="sidebar-ov-social-item" href="https://github.com/sergget" target="_blank" rel="noopener"><span class="sidebar-ov-social-item__icon"><i class="fab fa-github"></i></span><span class="sidebar-ov-social-item__text">github</span></a><a class="sidebar-ov-social-item" href="mailto:sergget.yang@outlook.com" target="_blank" rel="noopener"><span class="sidebar-ov-social-item__icon"><i class="far fa-envelope"></i></span><span class="sidebar-ov-social-item__text">outlook</span></a></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">28</div><div class="sidebar-ov-state-item__name">归档</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="javascript:;"><div class="sidebar-ov-state-item__count">3</div><div class="sidebar-ov-state-item__name">分类</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="知识共享许可协议" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">你已阅读了 </span><span class="sidebar-reading-info__num">0</span><span class="sidebar-reading-info__perc">%</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2021</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Sergio7</span></div><div><span>由 <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a> 强力驱动</span><span> v5.4.0</span><span class="footer__devider">|</span><span>主题 - <a href="https://github.com/liuyib/hexo-theme-stun/" title="Stun" target="_blank" rel="noopener">Stun</a></span><span> v2.6.2</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><div class="search-mask"></div><div class="search-popup"><span class="search-close"></span><div class="search-input"><input placeholder="搜索文章（支持多关键词，请用空格分隔）"></div><div class="search-results"></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/ribbon.js@latest/dist/ribbon.min.js" size="120" alpha="0.6" zIndex="-1"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,255,255" opacity="0.6" count="99" zIndex="-1"></script><script>function initSearch() {
+  var isXML = true;
+  var search_path = 'search.json';
+
+  if (!search_path) {
+    search_path = 'search.xml';
+  } else if (/json$/i.test(search_path)) {
+    isXML = false;
+  }
+
+  var path = '/' + search_path;
+  $.ajax({
+    url: path,
+    dataType: isXML ? 'xml' : 'json',
+    async: true,
+    success: function (res) {
+      var datas = isXML ? $('entry', res).map(function () {
+        // 将 XML 转为 JSON
+        return {
+          title: $('title', this).text(),
+          content: $('content', this).text(),
+          url: $('url', this).text()
+        };
+      }).get() : res;
+      var $input = $('.search-input input');
+      var $result = $('.search-results');
+      // 搜索对象（标题、内容）的权重，影响显示顺序
+      var WEIGHT = { title: 100, content: 1 };
+      var searchPost = function () {
+        var searchText = $input.val().toLowerCase().trim();
+        // 根据空白字符分隔关键字
+        var keywords = searchText.split(/[\s]+/);
+        // 搜索结果
+        var matchPosts = [];
+
+        // 有多个关键字时，将原文字整个保存下来
+        if (keywords.length > 1) {
+          keywords.push(searchText);
+        }
+        // 防止未输入字符时搜索
+        if (searchText.length > 0) {
+          datas.forEach(function (data) {
+            var isMatch  = false;
+            // 没有标题的文章使用预设的 i18n 变量代替
+            var title = (data.title && data.title.trim()) || '[ 文章无标题 ]';
+            var titleLower = title && title.toLowerCase();
+            // 删除 HTML 标签 和 所有空白字符
+            var content = data.content && data.content.replace(/<[^>]+>/g, '');
+            var contentLower = content && content.toLowerCase();
+            // 删除重复的 /
+            var postURL = data.url && decodeURI(data.url).replace(/\/{2,}/g, '/');
+            // 标题中匹配到的关键词
+            var titleHitSlice = [];
+            // 内容中匹配到的关键词
+            var contentHitSlice = [];
+
+            keywords.forEach(function (keyword) {
+              /**
+              * 获取匹配的关键词的索引
+              * @param {String} keyword 要匹配的关键字
+              * @param {String} text 原文字
+              * @param {Boolean} caseSensitive 是否区分大小写
+              * @param {Number} weight 匹配对象的权重。权重大的优先显示
+              * @return {Array}
+              */
+              function getIndexByword (word, text, caseSensitive, weight) {
+                if (!word || !text) {
+                  return [];
+                };
+
+                var startIndex = 0; // 每次匹配的开始索引
+                var index = -1;     // 匹配到的索引值
+                var result = [];    // 匹配结果
+
+                if (!caseSensitive) {
+                  word = word.toLowerCase();
+                  text = text.toLowerCase();
+                }
+
+                while((index = text.indexOf(word, startIndex)) !== -1) {
+                  var hasMatch = false;
+                  // 索引位置相同的关键词，保留长度较长的
+                  titleHitSlice.forEach(function (hit) {
+                    if (hit.index === index && hit.word.length < word.length) {
+                      hit.word = word;
+                      hasMatch = true;
+                    }
+                  });
+                  startIndex = index + word.length;
+                  !hasMatch && result.push({ index: index, word: word, weight: weight });
+                }
+                return result;
+              }
+              titleHitSlice = titleHitSlice.concat(getIndexByword(keyword, titleLower, false, WEIGHT.title));
+              contentHitSlice = contentHitSlice.concat(getIndexByword(keyword, contentLower, false, WEIGHT.content));
+            });
+
+            var hitTitle = titleHitSlice.length;
+            var hitContent = contentHitSlice.length;
+
+            if (hitTitle > 0 || hitContent > 0) {
+              isMatch = true;
+            }
+            if (isMatch) {
+              ;[titleHitSlice, contentHitSlice].forEach(function (hit) {
+                // 按照匹配文字的索引的递增顺序排序
+                hit.sort(function (left, right) {
+                  return left.index - right.index;
+                });
+              });
+              /**
+              * 给文本中匹配到的关键词添加标记，从而进行高亮显示
+              * @param {String} text 原文本
+              * @param {Array} hitSlice 匹配项的索引信息
+              * @param {Number} start 开始索引
+              * @param {Number} end 结束索引
+              * @return {String}
+              */
+              function highlightKeyword (text, hitSlice, start, end) {
+                if (!text || !hitSlice || !hitSlice.length) {
+                  return;
+                }
+
+                var result = '';
+                var startIndex = start;
+                var endIndex = end;
+                hitSlice.forEach(function (hit) {
+                  if (hit.index < startIndex) {
+                    return;
+                  }
+
+                  var hitWordEnd = hit.index + hit.word.length;
+                  result += text.slice(startIndex, hit.index);
+                  result += '<b>' + text.slice(hit.index, hitWordEnd) + '</b>';
+                  startIndex = hitWordEnd;
+                });
+                result += text.slice(startIndex, endIndex);
+                return result;
+              }
+
+              var postData = {};
+              // 文章总的搜索权重
+              var postWeight = titleHitSlice.length * WEIGHT.title + contentHitSlice.length * WEIGHT.content;
+              // 标记匹配关键词后的标题
+              var postTitle = highlightKeyword(title, titleHitSlice, 0, title.length) || title;
+              // 标记匹配关键词后的内容
+              var postContent;
+              // 显示内容的长度
+              var SHOW_WORD_LENGTH = 200;
+              // 命中关键词前的字符显示长度
+              var SHOW_WORD_FRONT_LENGTH = 20;
+              var SHOW_WORD_END_LENGTH = SHOW_WORD_LENGTH - SHOW_WORD_FRONT_LENGTH;
+
+              // 截取匹配的第一个字符，前后共 200 个字符来显示
+              if (contentHitSlice.length > 0) {
+                var firstIndex = contentHitSlice[0].index;
+                var start = firstIndex > SHOW_WORD_FRONT_LENGTH ? firstIndex - SHOW_WORD_FRONT_LENGTH : 0;
+                var end = firstIndex + SHOW_WORD_END_LENGTH;
+                postContent = highlightKeyword(content, contentHitSlice, start, end);
+              } else { // 未匹配到内容，直接截取前 200 个字符来显示
+                postContent = content.slice(0, SHOW_WORD_LENGTH);
+              }
+              postData.title = postTitle;
+              postData.content = postContent;
+              postData.url = postURL;
+              postData.weight = postWeight;
+              matchPosts.push(postData);
+            }
+          });
+        }
+
+        var resultInnerHtml = '';
+        if (matchPosts.length) {
+          // 按权重递增的顺序排序，使权重大的优先显示
+          matchPosts.sort(function (left, right) {
+            return right.weight - left.weight;
+          });
+          resultInnerHtml += '<ul>';
+          matchPosts.forEach(function (post) {
+            resultInnerHtml += '<li><a class="search-results-title" href="' + post.url + '">';
+            resultInnerHtml += post.title;
+            resultInnerHtml += '</a><div class="search-results-content">';
+            resultInnerHtml += post.content;
+            resultInnerHtml += '</div></li>';
+          });
+          resultInnerHtml += '</ul>';
+        } else {
+          resultInnerHtml += '<div class="search-results-none"><i class="far fa-meh"></i></div>';
+        }
+        $result.html(resultInnerHtml);
+      };
+      $input.on('input', searchPost);
+      $input.on('keyup', function (e) {
+        if (e.keyCode === Stun.utils.codeToKeyCode('Enter')) {
+          searchPost();
+        }
+      });
+    }
+  });
+}
+
+function closeSearch () {
+  $('body').css({ overflow: 'auto' });
+  $('.search-popup').css({ display: 'none' });
+  $('.search-mask').css({ display: 'none' });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+  Stun.utils.pjaxReloadLocalSearch = function () {
+    $('.header-nav-search').on('click', function (e) {
+      e.stopPropagation();
+      $('body').css('overflow', 'hidden');
+      $('.search-popup')
+        .velocity('stop')
+        .velocity('transition.expandIn', {
+          duration: 300,
+          complete: function () {
+            $('.search-popup input').focus();
+          }
+        });
+      $('.search-mask')
+        .velocity('stop')
+        .velocity('transition.fadeIn', {
+          duration: 300
+        });
+
+      initSearch();
+    });
+    $('.search-mask, .search-close').on('click', function () {
+      closeSearch();
+    });
+    $(document).on('keydown', function (e) {
+      // Escape <=> 27
+      if (e.keyCode === Stun.utils.codeToKeyCode('Escape')) {
+        closeSearch();
+      }
+    });
+  };
+
+  Stun.utils.pjaxReloadLocalSearch();
+}, false);
+
+function safeOpenUrl(url) {
+  var newTab = window.open();
+  newTab.opener = null;
+  newTab.location = url;
+}
+
+function extSearch(engine) {
+  var engines = {
+    google: 'https://www.google.com/search?q=',
+    bing: 'https://cn.bing.com/search?q=',
+    baidu: 'https://www.baidu.com/s?ie=UTF-8&wd=',
+  };
+  var host = window.location.host;
+  var query = $('.search-input input').val().toLowerCase().trim();
+  var uri = engines[engine] + query + ' site:' + host;
+
+  if (query) {
+    safeOpenUrl(uri);
+  } else {
+    Stun.utils.popAlert('warning', '请输入字符');
+  }
+}
+
+var assistSearchList = window.CONFIG.assistSearch;
+
+if (Array.isArray(assistSearchList)) {
+  assistSearchList.forEach(function (name) {
+    document.querySelector('.search-btns-item--' + name).addEventListener('click', function () {
+      extSearch(name);
+    }, false);
+  });
+}</script><script>function loadDisqus () {
+  if (!document.getElementById('disqus_thread')) {
+    return;
+  }
+  if (window.DISQUS) {
+    DISQUS.reset({
+      reload: true,
+      config: function () {
+        this.page.url = 'https://sergget.ga/20210518/88d6c7c0b6a9/';
+        this.page.identifier = '20210518/88d6c7c0b6a9/';
+        this.page.title = '硬盘自检工具-smartctl的使用';
+      }
+    });
+  } else {
+    var d = document;
+    var sc = d.createElement('script');
+    var se = d.createElement('script');
+
+    if (true) {
+      sc.src = 'https://sergio7s-blog.disqus.com/count.js';
+      sc.id = 'dsq-count-scr';
+      sc.async = true;
+      if (false) {
+        sc.setAttribute('data-pjax', '');
+      }
+      (d.head || d.body).appendChild(sc);
+    }
+    se.src = 'https://sergio7s-blog.disqus.com/embed.js';
+    (d.head || d.body).appendChild(se);
+  }
+}
+
+if (false) {
+  loadDisqus();
+} else {
+  window.addEventListener('DOMContentLoaded', loadDisqus, false);
+}</script><script src="/js/utils.js?v=2.6.2"></script><script src="/js/stun-boot.js?v=2.6.2"></script><script src="/js/scroll.js?v=2.6.2"></script><script src="/js/header.js?v=2.6.2"></script><script src="/js/sidebar.js?v=2.6.2"></script><script type="application/json" src="/search.json"></script></body></html>
