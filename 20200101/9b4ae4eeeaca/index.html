@@ -47,7 +47,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </ul>
 <blockquote>
 <p>$ git config –global user.name “runoob”</p>
-<p>$ git config –global user.email <span class="exturl"><a class="exturl__link"   href="mailto:&#116;&#101;&#x73;&#116;&#64;&#x72;&#117;&#x6e;&#x6f;&#111;&#x62;&#x2e;&#99;&#111;&#109;" >&#116;&#101;&#x73;&#116;&#64;&#x72;&#117;&#x6e;&#x6f;&#111;&#x62;&#x2e;&#99;&#111;&#109;</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
+<p>$ git config –global user.email <span class="exturl"><a class="exturl__link"   href="mailto:&#116;&#x65;&#x73;&#116;&#x40;&#114;&#x75;&#110;&#x6f;&#111;&#x62;&#x2e;&#99;&#x6f;&#109;" >&#116;&#x65;&#x73;&#116;&#x40;&#114;&#x75;&#110;&#x6f;&#111;&#x62;&#x2e;&#99;&#x6f;&#109;</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span></p>
 </blockquote>
 <ul>
 <li>文本编辑器</li>
@@ -108,11 +108,11 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </blockquote>
 <p>查找指定用户的提交日志可以使用命令：<code>git log --author</code> , 例如，比方说我们要找 Git 源码中 Linus 提交的部分：</p>
 <blockquote>
-<p>$ git log –author=Linus –oneline -5</p>
+<p>$ git log –author&#x3D;Linus –oneline -5</p>
 </blockquote>
 <p>如果你要指定日期，可以执行几个选项：–since 和 –before，但是你也可以用 –until 和 –after。<br>例如，如果我要看 Git 项目中三周前且在四月十八日之后的所有提交，我可以执行这个（我还用了 –no-merges 选项以隐藏合并提交）：</p>
 <blockquote>
-<p>$ git log –oneline –before={3.weeks.ago} –after={2010-04-18} –no-merges</p>
+<p>$ git log –oneline –before&#x3D;{3.weeks.ago} –after&#x3D;{2010-04-18} –no-merges</p>
 </blockquote>
 
         <h3 id="Git-tag-标签"   >
@@ -156,9 +156,9 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 </blockquote>
 <p>由于本地Git仓库和GitHub仓库之间的传输是通过SSH加密的，所以我们需要配置验证信息：<br>使用以下命令生成SSH Key：</p>
 <blockquote>
-<p>$ ssh-keygen -t rsa -C “<span class="exturl"><a class="exturl__link"   href="mailto:&#x79;&#111;&#x75;&#x72;&#101;&#109;&#97;&#105;&#x6c;&#x40;&#101;&#120;&#x61;&#x6d;&#112;&#x6c;&#101;&#46;&#x63;&#111;&#109;" >&#x79;&#111;&#x75;&#x72;&#101;&#109;&#97;&#105;&#x6c;&#x40;&#101;&#120;&#x61;&#x6d;&#112;&#x6c;&#101;&#46;&#x63;&#111;&#109;</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>”</p>
+<p>$ ssh-keygen -t rsa -C “<span class="exturl"><a class="exturl__link"   href="mailto:&#121;&#x6f;&#117;&#x72;&#x65;&#109;&#97;&#105;&#108;&#64;&#x65;&#120;&#x61;&#109;&#112;&#x6c;&#x65;&#46;&#x63;&#x6f;&#109;" >&#121;&#x6f;&#117;&#x72;&#x65;&#109;&#97;&#105;&#108;&#64;&#x65;&#120;&#x61;&#109;&#112;&#x6c;&#x65;&#46;&#x63;&#x6f;&#109;</a><span class="exturl__icon"><i class="fas fa-external-link-alt"></i></span></span>”</p>
 </blockquote>
-<p>成功的话会在~/下生成.ssh文件夹，进去，打开 id_rsa.pub，复制里面的 key。<br>回到 github 上，进入 Account =&gt; Settings（账户配置）。</p>
+<p>成功的话会在~&#x2F;下生成.ssh文件夹，进去，打开 id_rsa.pub，复制里面的 key。<br>回到 github 上，进入 Account &#x3D;&gt; Settings（账户配置）。</p>
 <p>左边选择 SSH and GPG keys，然后点击 New SSH key 按钮,title 设置标题，可以随便填，粘贴在你电脑上生成的 key。</p>
 <ul>
 <li>查看当前的远程库</li>

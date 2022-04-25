@@ -48,7 +48,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 
         <h2 id="2-配置需要共享的目录"   >
           <a href="#2-配置需要共享的目录" class="heading-link"><i class="fas fa-link"></i></a><a href="#2-配置需要共享的目录" class="headerlink" title="2. 配置需要共享的目录"></a>2. 配置需要共享的目录</h2>
-      <p>改变需要共享目录的权限，让其他人可以更改文件和目录，以/home为例（若多人使用同一服务器建议在每个用户家目录单独共享，不建议共享整个home目录，防止误操作删除他人文件）</p>
+      <p>改变需要共享目录的权限，让其他人可以更改文件和目录，以&#x2F;home为例（若多人使用同一服务器建议在每个用户家目录单独共享，不建议共享整个home目录，防止误操作删除他人文件）</p>
 <figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> sudo chmod 777 /home/ -R</span></span><br></pre></td></tr></table></div></figure>
 
 
@@ -70,7 +70,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
           <a href="#5-重启samba服务" class="heading-link"><i class="fas fa-link"></i></a><a href="#5-重启samba服务" class="headerlink" title="5. 重启samba服务"></a>5. 重启samba服务</h2>
       <figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo service smbd restart</span><br></pre></td></tr></table></div></figure>
 
-<p>若找不到服务可尝试如下方法，不过得具体看，有的版本路径不是/etc/init.d/samba，比如我的为/etc/init.d/samba-ad-dc，可以看对应路径是啥，决定用哪个命令</p>
+<p>若找不到服务可尝试如下方法，不过得具体看，有的版本路径不是&#x2F;etc&#x2F;init.d&#x2F;samba，比如我的为&#x2F;etc&#x2F;init.d&#x2F;samba-ad-dc，可以看对应路径是啥，决定用哪个命令</p>
 <figure class="highlight shell"><div class="table-container"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo /etc/init.d/samba restart</span><br><span class="line"><span class="meta">#</span><span class="bash">sudo /etc/init.d/samba-ad-dc restart</span></span><br></pre></td></tr></table></div></figure>
 
 

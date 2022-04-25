@@ -16,7 +16,7 @@
 <meta property="og:image" content="https://sergget.ga/20200228/2bf772196f74/8.png">
 <meta property="og:image" content="https://sergget.ga/20200228/2bf772196f74/9.png">
 <meta property="article:published_time" content="2020-02-28T03:25:48.000Z">
-<meta property="article:modified_time" content="2022-04-25T11:56:34.607Z">
+<meta property="article:modified_time" content="2022-04-25T11:59:52.680Z">
 <meta property="article:author" content="Sergio7">
 <meta property="article:tag" content="Excel">
 <meta property="article:tag" content="Powerquery">
@@ -82,7 +82,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 
         <h3 id="4、关系的鲁棒性"   >
           <a href="#4、关系的鲁棒性" class="heading-link"><i class="fas fa-link"></i></a><a href="#4、关系的鲁棒性" class="headerlink" title="4、关系的鲁棒性"></a>4、关系的鲁棒性</h3>
-      <p>鲁棒性是在写代码中非常常见的一个词，音/意译自英语<code>robust</code>，实际上翻译成<code>健壮性</code>更容易理解，但是<code>鲁棒</code>这个翻译实在是太接地气了，又<code>“鲁”</code>又<code>“棒”</code>。不论是哪种翻译，都是在说程序的代码需要足够的稳定、健全。可是，</p>
+      <p>鲁棒性是在写代码中非常常见的一个词，音&#x2F;意译自英语<code>robust</code>，实际上翻译成<code>健壮性</code>更容易理解，但是<code>鲁棒</code>这个翻译实在是太接地气了，又<code>“鲁”</code>又<code>“棒”</code>。不论是哪种翻译，都是在说程序的代码需要足够的稳定、健全。可是，</p>
 <p><img src="/20200228/2bf772196f74/shenme.png" alt="img"></p>
 <p>我们前面提到，power query编辑的是<code>数据源 ====&gt; 统计结果</code>的映射，这个映射是靠一步一步的步骤处理每一列来实现的，因此我们需要尽可能考虑到每一步都应全面考虑到这一步出现的所有可能情况，保证数据源数据的合法性和power query中编辑步骤的全面性。比如，分解日期列就需要保证数据源这一列全部是合理的日期。替换不需要的符号的时候就需要将所有可能出现的不需要的符号全部替换掉，即便当前数据中没有出现。如果没有考虑到所有的情况，在后续更新数据时很有可能出现某一步报错，造成后续步骤报错无法处理。这个时候再来排查错误就会非常耗时。</p>
 
@@ -94,7 +94,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 5.4.0"></he
 <li>已安装了power query插件的excel</li>
 </ul>
 <p>以上准备完成，我们就可以开始创建一个query：</p>
-<p>1、打开空excel表格，切换到<code>数据</code>标签，可以看到左面的标签有几个不同的数据导入来源，由于我们刚刚开始，因此，我们选择<code>新建查询(New Query)</code> =&gt; <code>来自文件(From File)</code> =&gt; <code>来自工作簿(From Workbook)</code>，然后选择上面准备的数据源。</p>
+<p>1、打开空excel表格，切换到<code>数据</code>标签，可以看到左面的标签有几个不同的数据导入来源，由于我们刚刚开始，因此，我们选择<code>新建查询(New Query)</code> &#x3D;&gt; <code>来自文件(From File)</code> &#x3D;&gt; <code>来自工作簿(From Workbook)</code>，然后选择上面准备的数据源。</p>
 <p><img src="/20200228/2bf772196f74/1.png" alt="img"></p>
 <p>2、选择<code>编辑（Edit）</code>，进入power query编辑器。 </p>
 <p><img src="/20200228/2bf772196f74/2.png" alt="img"></p>
